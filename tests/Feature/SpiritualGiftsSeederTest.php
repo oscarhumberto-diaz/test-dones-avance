@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\SpiritualTest;
+use App\Models\Test as SpiritualTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

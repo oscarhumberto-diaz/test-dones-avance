@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use App\Models\Answer;
 use App\Models\Attempt;
+use App\Models\AttemptGiftScore;
 use App\Models\Gift;
-use App\Models\GiftScore;
 use App\Models\Question;
-use App\Models\SpiritualTest;
+use App\Models\Test;
 use Database\Seeders\SpiritualGiftsSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +16,6 @@ use Livewire\Component;
 class TestDonesWizard extends Component
 {
     public string $nombre_persona = '';
-
-    public ?string $statusMessage = null;
 
     public int $pageIndex = 0;
 
@@ -31,7 +29,7 @@ class TestDonesWizard extends Component
 
     public function mount(): void
     {
-        $test = SpiritualTest::query()->where('nombre', SpiritualGiftsSeeder::TEST_NAME)->firstOrFail();
+        $test = Test::query()->where('nombre', SpiritualGiftsSeeder::TEST_NAME)->firstOrFail();
         $this->testId = $test->id;
 
         $this->questions = Question::query()
@@ -46,27 +44,17 @@ class TestDonesWizard extends Component
 
     public function previousPage(): void
     {
-        $this->statusMessage = null;
         $this->pageIndex = max(0, $this->pageIndex - 1);
     }
 
     public function nextPage(): void
     {
-        $this->statusMessage = null;
         $this->validateCurrentPage();
-        $this->pageIndex = min($this->lastPageIndex(), $this->pageIndex + 1);
-    }
-
-    public function saveAndContinue(): void
-    {
-        $this->validateCurrentPage();
-        $this->statusMessage = 'Respuestas guardadas en memoria para esta sesión.';
         $this->pageIndex = min($this->lastPageIndex(), $this->pageIndex + 1);
     }
 
     public function submit(): mixed
     {
-        $this->statusMessage = null;
         $this->validateAll();
 
         $attempt = DB::transaction(function () {
@@ -85,10 +73,7 @@ class TestDonesWizard extends Component
 
             $scores = [];
 
-            Gift::query()
-                ->where('test_id', $this->testId)
-                ->with('questions:id')
-                ->get()
+            Gift::query()->where('test_id', $this->testId)->with('questions:id')->get()
                 ->each(function (Gift $gift) use ($attempt, &$scores) {
                     $suma = $gift->questions->sum(fn ($question) => (int) ($this->answers[$question->id] ?? 0));
 
@@ -102,12 +87,12 @@ class TestDonesWizard extends Component
                     ];
                 });
 
-            GiftScore::query()->insert($scores);
+            AttemptGiftScore::query()->insert($scores);
 
             return $attempt;
         });
 
-        return $this->redirectRoute('result.show', ['attempt' => $attempt->id], navigate: true);
+        return $this->redirectRoute('result.show', ['attempt' => $attempt], navigate: true);
     }
 
     public function render()
@@ -127,12 +112,7 @@ class TestDonesWizard extends Component
             $rules["answers.$questionId"] = ['required', 'integer', 'between:0,3'];
         }
 
-        $messages = [
-            'nombre_persona.required' => 'Por favor escribe tu nombre para continuar.',
-            'nombre_persona.min' => 'El nombre debe tener al menos 3 caracteres.',
-        ];
-
-        $this->validate($rules, $messages);
+        $this->validate($rules);
     }
 
     private function validateAll(): void
@@ -143,21 +123,13 @@ class TestDonesWizard extends Component
             $rules["answers.$question->id"] = ['required', 'integer', 'between:0,3'];
         }
 
-        $messages = [
-            'nombre_persona.required' => 'Por favor escribe tu nombre para enviar el test.',
-            'nombre_persona.min' => 'El nombre debe tener al menos 3 caracteres.',
-        ];
-
-        $this->validate($rules, $messages);
+        $this->validate($rules);
     }
 
     /** @return array<int, int> */
     private function questionIdsForCurrentPage(): array
     {
-        return $this->questions
-            ->slice($this->pageIndex * 10, 10)
-            ->pluck('id')
-            ->all();
+        return $this->questions->slice($this->pageIndex * 10, 10)->pluck('id')->all();
     }
 
     private function lastPageIndex(): int

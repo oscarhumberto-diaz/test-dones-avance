@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class SpiritualTest extends Model
+class Test extends Model
 {
     protected $table = 'tests';
 
@@ -13,11 +13,16 @@ class SpiritualTest extends Model
 
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class, 'test_id');
+        return $this->hasMany(Question::class);
     }
 
     public function gifts(): HasMany
     {
-        return $this->hasMany(Gift::class, 'test_id');
+        return $this->hasMany(Gift::class);
+    }
+
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(Attempt::class);
     }
 }
