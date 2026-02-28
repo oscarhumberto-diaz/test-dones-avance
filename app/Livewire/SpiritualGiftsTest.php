@@ -7,6 +7,8 @@ use App\Models\Attempt;
 use App\Models\Gift;
 use App\Models\GiftScore;
 use App\Models\Question;
+use App\Models\SpiritualTest;
+use Database\Seeders\SpiritualGiftsSeeder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -20,12 +22,21 @@ class SpiritualGiftsTest extends Component
 
     public int $perPage = 10;
 
+    public int $testId;
+
     /** @var array<int, int|null> */
     public array $answers = [];
 
     public function mount(): void
     {
-        $questionIds = Question::query()->orderBy('number')->pluck('id')->all();
+        $test = SpiritualTest::query()->where('nombre', SpiritualGiftsSeeder::TEST_NAME)->firstOrFail();
+        $this->testId = $test->id;
+
+        $questionIds = Question::query()
+            ->where('test_id', $this->testId)
+            ->orderBy('numero')
+            ->pluck('id')
+            ->all();
 
         foreach ($questionIds as $questionId) {
             $this->answers[$questionId] = null;
@@ -49,38 +60,35 @@ class SpiritualGiftsTest extends Component
 
         $attempt = DB::transaction(function () {
             $attempt = Attempt::query()->create([
-                'full_name' => trim($this->full_name),
-                'submitted_at' => now(),
+                'test_id' => $this->testId,
+                'nombre_persona' => trim($this->full_name),
             ]);
 
             foreach ($this->answers as $questionId => $value) {
                 Answer::query()->create([
                     'attempt_id' => $attempt->id,
                     'question_id' => $questionId,
-                    'value' => $value,
+                    'valor' => $value,
                 ]);
             }
 
             $scores = [];
-            $total = 0;
 
-            Gift::query()->with('questions:id')->get()->each(function (Gift $gift) use ($attempt, &$scores, &$total) {
-                $raw = $gift->questions->sum(fn ($question) => (int) ($this->answers[$question->id] ?? 0));
-                $final = $raw * 3;
-                $total += $final;
+            Gift::query()->where('test_id', $this->testId)->with('questions:id')->get()->each(function (Gift $gift) use ($attempt, &$scores) {
+                $suma = $gift->questions->sum(fn ($question) => (int) ($this->answers[$question->id] ?? 0));
+                $total = $suma * 3;
 
                 $scores[] = [
                     'attempt_id' => $attempt->id,
                     'gift_id' => $gift->id,
-                    'raw_score' => $raw,
-                    'final_score' => $final,
+                    'suma' => $suma,
+                    'total' => $total,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
             });
 
             GiftScore::query()->insert($scores);
-            $attempt->update(['total_score' => $total]);
 
             return $attempt;
         });
@@ -92,7 +100,7 @@ class SpiritualGiftsTest extends Component
 
     public function render()
     {
-        $questions = Question::query()->orderBy('number')->get();
+        $questions = Question::query()->where('test_id', $this->testId)->orderBy('numero')->get();
         $slice = $questions->forPage($this->currentPage, $this->perPage);
 
         return view('livewire.spiritual-gifts-test', [
@@ -127,7 +135,11 @@ class SpiritualGiftsTest extends Component
     {
         $rules = ['full_name' => ['required', 'string', 'min:5', 'max:120']];
 
-        $ids = Question::query()->orderBy('number')->forPage($this->currentPage, $this->perPage)->pluck('id');
+        $ids = Question::query()
+            ->where('test_id', $this->testId)
+            ->orderBy('numero')
+            ->forPage($this->currentPage, $this->perPage)
+            ->pluck('id');
 
         foreach ($ids as $questionId) {
             $rules["answers.$questionId"] = ['required', 'integer', 'between:0,3'];
@@ -138,6 +150,8 @@ class SpiritualGiftsTest extends Component
 
     private function totalPages(): int
     {
-        return (int) ceil(Question::query()->count() / $this->perPage);
+        $count = Question::query()->where('test_id', $this->testId)->count();
+
+        return (int) ceil($count / $this->perPage);
     }
 }

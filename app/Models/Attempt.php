@@ -3,19 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attempt extends Model
 {
     protected $fillable = [
-        'full_name',
-        'total_score',
-        'submitted_at',
+        'test_id',
+        'nombre_persona',
     ];
 
-    protected $casts = [
-        'submitted_at' => 'datetime',
-    ];
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(SpiritualTest::class, 'test_id');
+    }
 
     public function answers(): HasMany
     {
