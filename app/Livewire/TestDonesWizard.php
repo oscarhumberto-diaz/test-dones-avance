@@ -17,6 +17,8 @@ class TestDonesWizard extends Component
 {
     public string $nombre_persona = '';
 
+    public ?string $statusMessage = null;
+
     public int $pageIndex = 0;
 
     public int $testId;
@@ -44,17 +46,27 @@ class TestDonesWizard extends Component
 
     public function previousPage(): void
     {
+        $this->statusMessage = null;
         $this->pageIndex = max(0, $this->pageIndex - 1);
     }
 
     public function nextPage(): void
     {
+        $this->statusMessage = null;
         $this->validateCurrentPage();
+        $this->pageIndex = min($this->lastPageIndex(), $this->pageIndex + 1);
+    }
+
+    public function saveAndContinue(): void
+    {
+        $this->validateCurrentPage();
+        $this->statusMessage = 'Respuestas guardadas en memoria para esta sesión.';
         $this->pageIndex = min($this->lastPageIndex(), $this->pageIndex + 1);
     }
 
     public function submit(): mixed
     {
+        $this->statusMessage = null;
         $this->validateAll();
 
         $attempt = DB::transaction(function () {
@@ -115,7 +127,12 @@ class TestDonesWizard extends Component
             $rules["answers.$questionId"] = ['required', 'integer', 'between:0,3'];
         }
 
-        $this->validate($rules);
+        $messages = [
+            'nombre_persona.required' => 'Por favor escribe tu nombre para continuar.',
+            'nombre_persona.min' => 'El nombre debe tener al menos 3 caracteres.',
+        ];
+
+        $this->validate($rules, $messages);
     }
 
     private function validateAll(): void
@@ -126,7 +143,12 @@ class TestDonesWizard extends Component
             $rules["answers.$question->id"] = ['required', 'integer', 'between:0,3'];
         }
 
-        $this->validate($rules);
+        $messages = [
+            'nombre_persona.required' => 'Por favor escribe tu nombre para enviar el test.',
+            'nombre_persona.min' => 'El nombre debe tener al menos 3 caracteres.',
+        ];
+
+        $this->validate($rules, $messages);
     }
 
     /** @return array<int, int> */
