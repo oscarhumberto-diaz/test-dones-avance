@@ -1,25 +1,16 @@
 # MVP · Test de Dones Espirituales (AVANCE 2020)
 
-Proyecto base en **Laravel (última versión estable)** + **Livewire v3** + **MySQL**, sin login.
-
-## Funcionalidades incluidas
-- Ruta pública del test: `/test`
-- Campo obligatorio de nombre completo
-- 60 preguntas con escala `0,1,2,3`
-- Navegación paginada (10 preguntas por página)
-- Persistencia en MySQL de intento y respuestas
-- Cálculo de 20 dones (3 preguntas por don)
-- Resultado en `/resultado/{id}` con Top 3 y tabla completa
-- UI con Tailwind + DaisyUI (responsive)
+Proyecto base en **Laravel** + **Livewire v3** + **MySQL** para ejecutar el MVP del test sin login.
 
 ## Requisitos
 - PHP 8.2+
 - Composer
-- Node.js 20+
-- MySQL 8+
+- Node 18+
+- MySQL
 
-## Cómo correr el proyecto
-1. Instalar dependencias PHP:
+## Instalación
+
+1. Instalar dependencias de PHP:
    ```bash
    composer install
    ```
@@ -27,8 +18,16 @@ Proyecto base en **Laravel (última versión estable)** + **Livewire v3** + **My
    ```bash
    cp .env.example .env
    ```
-3. Configurar DB MySQL en `.env` (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
-4. Generar key:
+3. Configurar en `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=avance_dones
+   DB_USERNAME=usuario
+   DB_PASSWORD=clave
+   ```
+4. Generar la key de la aplicación:
    ```bash
    php artisan key:generate
    ```
@@ -40,44 +39,72 @@ Proyecto base en **Laravel (última versión estable)** + **Livewire v3** + **My
    ```bash
    npm install
    ```
-7. Compilar assets:
+7. Compilar assets de producción del MVP:
    ```bash
-   npm run dev
+   npm run build
    ```
-8. Levantar servidor:
+8. Levantar servidor local:
    ```bash
    php artisan serve
    ```
 
-## Importar textos de preguntas (opcional)
-Se incluye el comando:
+Acceder a:
+
+- http://127.0.0.1:8000/test
+
+## Qué deja listo el seed
+- 1 test
+- 60 preguntas (placeholder)
+- 20 dones
+- Mapeo correcto (3 preguntas por don)
+
+## Opcional: Importar preguntas reales
+Si deseas reemplazar los textos de las preguntas:
 
 ```bash
-php artisan avance:import-preguntas {path}
+php artisan avance:import-preguntas storage/app/preguntas.json
 ```
 
-- Soporta archivos **JSON** o **CSV**.
-- Debe incluir campos/columnas: `numero`, `texto`.
-- Actualiza `questions.texto` por `numero` para el test **"Test de Dones Espirituales (AVANCE 2020)"**.
-
-### Ejemplo JSON
-Archivo de referencia: `examples/preguntas.json`
+Formato esperado (JSON):
 
 ```json
 [
-  {"numero": 1, "texto": "Texto actualizado de la pregunta 1"},
-  {"numero": 2, "texto": "Texto actualizado de la pregunta 2"}
+  {"numero":1,"texto":"Texto real pregunta 1"},
+  {"numero":2,"texto":"Texto real pregunta 2"}
 ]
 ```
 
-### Ejemplo CSV
-```csv
-numero,texto
-1,"Texto actualizado de la pregunta 1"
-2,"Texto actualizado de la pregunta 2"
-```
+## Producción
+- Ejecutar `npm run build`
+- Configurar `APP_ENV=production`
+- Configurar `APP_DEBUG=false`
 
-## Notas de implementación
-- Cada don suma 3 respuestas (rango 0..9) y se transforma a puntaje final multiplicando por `3`.
-- El resultado final destaca los 3 dones con mayor puntuación.
-- La semilla `SpiritualGiftsSeeder` crea 60 preguntas, 20 dones y su mapeo exacto (3 preguntas por don).
+## Solución de problemas comunes
+
+- **Error de permisos en `storage` o `bootstrap/cache`**
+  ```bash
+  chmod -R ug+rwx storage bootstrap/cache
+  ```
+
+- **Cambios de `.env` no se reflejan**
+  ```bash
+  php artisan config:clear
+  php artisan cache:clear
+  php artisan route:clear
+  php artisan view:clear
+  ```
+
+- **La base de datos no conecta**
+  - Verificar que MySQL esté encendido.
+  - Confirmar valores `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
+  - Reintentar migraciones:
+    ```bash
+    php artisan migrate --seed
+    ```
+
+- **Error de assets/frontend**
+  ```bash
+  rm -rf node_modules package-lock.json
+  npm install
+  npm run build
+  ```
