@@ -9,35 +9,36 @@ return new class extends Migration {
     {
         Schema::create('attempts', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name');
-            $table->unsignedSmallInteger('total_score')->default(0);
-            $table->timestamp('submitted_at');
+            $table->foreignId('test_id')->constrained('tests')->cascadeOnDelete();
+            $table->string('nombre_persona', 200);
             $table->timestamps();
         });
 
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attempt_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('value');
+            $table->foreignId('attempt_id')->constrained('attempts')->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
+            $table->unsignedTinyInteger('valor');
             $table->timestamps();
+
             $table->unique(['attempt_id', 'question_id']);
         });
 
-        Schema::create('gift_scores', function (Blueprint $table) {
+        Schema::create('attempt_gift_scores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attempt_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('gift_id')->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('raw_score');
-            $table->unsignedTinyInteger('final_score');
+            $table->foreignId('attempt_id')->constrained('attempts')->cascadeOnDelete();
+            $table->foreignId('gift_id')->constrained('gifts')->cascadeOnDelete();
+            $table->unsignedTinyInteger('suma');
+            $table->unsignedSmallInteger('total');
             $table->timestamps();
+
             $table->unique(['attempt_id', 'gift_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('gift_scores');
+        Schema::dropIfExists('attempt_gift_scores');
         Schema::dropIfExists('answers');
         Schema::dropIfExists('attempts');
     }

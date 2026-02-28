@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GiftScore extends Model
 {
-    protected $fillable = ['attempt_id', 'gift_id', 'raw_score', 'final_score'];
+    protected $table = 'attempt_gift_scores';
+
+    protected $fillable = ['attempt_id', 'gift_id', 'suma', 'total'];
 
     public function attempt(): BelongsTo
     {

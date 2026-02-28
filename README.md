@@ -49,7 +49,35 @@ Proyecto base en **Laravel (última versión estable)** + **Livewire v3** + **My
    php artisan serve
    ```
 
+## Importar textos de preguntas (opcional)
+Se incluye el comando:
+
+```bash
+php artisan avance:import-preguntas {path}
+```
+
+- Soporta archivos **JSON** o **CSV**.
+- Debe incluir campos/columnas: `numero`, `texto`.
+- Actualiza `questions.texto` por `numero` para el test **"Test de Dones Espirituales (AVANCE 2020)"**.
+
+### Ejemplo JSON
+Archivo de referencia: `examples/preguntas.json`
+
+```json
+[
+  {"numero": 1, "texto": "Texto actualizado de la pregunta 1"},
+  {"numero": 2, "texto": "Texto actualizado de la pregunta 2"}
+]
+```
+
+### Ejemplo CSV
+```csv
+numero,texto
+1,"Texto actualizado de la pregunta 1"
+2,"Texto actualizado de la pregunta 2"
+```
+
 ## Notas de implementación
 - Cada don suma 3 respuestas (rango 0..9) y se transforma a puntaje final multiplicando por `3`.
 - El resultado final destaca los 3 dones con mayor puntuación.
-- La semilla `SpiritualGiftsSeeder` crea 60 preguntas y 20 dones con su mapeo.
+- La semilla `SpiritualGiftsSeeder` crea 60 preguntas, 20 dones y su mapeo exacto (3 preguntas por don).

@@ -22,7 +22,7 @@
                 @foreach($questions as $question)
                     <div class="card bg-base-200 border border-base-300">
                         <div class="card-body p-4">
-                            <p class="font-medium">{{ $question->number }}. {{ $question->text }}</p>
+                            <p class="font-medium">{{ $question->numero }}. {{ $question->texto }}</p>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
                                 @for($score = 0; $score <= 3; $score++)
                                     <label class="label cursor-pointer justify-start gap-2 bg-base-100 rounded-lg px-3 py-2">
