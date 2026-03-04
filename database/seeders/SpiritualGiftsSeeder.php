@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Gift;
 use App\Models\Question;
-use App\Models\SpiritualTest;
+use App\Models\Test;
 use Illuminate\Database\Seeder;
 
 class SpiritualGiftsSeeder extends Seeder
@@ -13,7 +13,7 @@ class SpiritualGiftsSeeder extends Seeder
 
     public function run(): void
     {
-        $test = SpiritualTest::query()->updateOrCreate(
+        $test = Test::query()->updateOrCreate(
             ['nombre' => self::TEST_NAME],
             [
                 'instrucciones' => 'Marca cada afirmación según tu frecuencia: 0=Nunca, 1=Rara vez, 2=Frecuentemente, 3=Siempre.',
@@ -53,10 +53,7 @@ class SpiritualGiftsSeeder extends Seeder
         ];
 
         foreach ($giftMap as $nombre => $numeros) {
-            $gift = Gift::query()->updateOrCreate(
-                ['test_id' => $test->id, 'nombre' => $nombre],
-                ['test_id' => $test->id, 'nombre' => $nombre]
-            );
+            $gift = Gift::query()->updateOrCreate(['test_id' => $test->id, 'nombre' => $nombre]);
 
             $questionIds = Question::query()
                 ->where('test_id', $test->id)

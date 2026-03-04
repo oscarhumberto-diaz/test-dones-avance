@@ -8,14 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Attempt extends Model
 {
-    protected $fillable = [
-        'test_id',
-        'nombre_persona',
-    ];
+    protected $fillable = ['test_id', 'nombre_persona'];
 
     public function test(): BelongsTo
     {
-        return $this->belongsTo(SpiritualTest::class, 'test_id');
+        return $this->belongsTo(Test::class);
     }
 
     public function answers(): HasMany
@@ -25,6 +22,6 @@ class Attempt extends Model
 
     public function giftScores(): HasMany
     {
-        return $this->hasMany(GiftScore::class);
+        return $this->hasMany(AttemptGiftScore::class);
     }
 }
