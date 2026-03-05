@@ -10,8 +10,9 @@ The application stores a 60-question assessment, lets participants answer the qu
 
 ## 3. Features
 - Laravel-based web app with a guided test flow (`/test`) and results endpoint (`/resultado/{attempt}`).
+- Admin panel with authentication at `/admin` (login, dashboard, history filters, and password change).
 - Database schema for tests, questions, gifts, attempts, answers, and aggregated scores.
-- Seeder for the AVANCE 2020 test structure and gift/question relationships.
+- Seeder for the AVANCE 2020 test structure and admin user provisioning.
 - Artisan command to import/update question text from JSON:
   - `php artisan avance:import-preguntas {path}`
 - Included dataset with 60 questions:
@@ -55,10 +56,14 @@ DB_PORT=3306
 DB_DATABASE=test_dones_avance
 DB_USERNAME=your_user
 DB_PASSWORD=your_password
+
+# Admin bootstrap credentials (installation-time only)
+ADMIN_USER=oscard
+ADMIN_PASSWORD=Oscar121*
 ```
 
 ## 7. Database Setup
-Run migrations and seed the base AVANCE 2020 records:
+Run migrations and seed base records + initial admin user:
 
 ```bash
 php artisan migrate --seed
@@ -70,7 +75,21 @@ If you prefer, you can run only migrations first:
 php artisan migrate
 ```
 
-## 8. Importing the 60 Questions (Artisan Command)
+Create/update only the admin user manually:
+
+```bash
+php artisan db:seed --class=AdminUserSeeder
+```
+
+> The admin password is always saved hashed (bcrypt via `Hash::make`), never in plain text.
+
+## 8. Admin Access
+- Open `/admin/login` and sign in with the admin credentials.
+- Routes under `/admin/*` are protected by `auth` middleware.
+- There is no public registration endpoint.
+- Change password at `/admin/perfil/password` once logged in.
+
+## 9. Importing the 60 Questions (Artisan Command)
 Use the included dataset to update the `questions` table:
 
 ```bash
@@ -86,11 +105,7 @@ Expected JSON format:
 ]
 ```
 
-Notes:
-- The command expects a valid JSON array.
-- It updates question text by question number for the seeded **AVANCE 2020** test.
-
-## 9. Running the Development Server
+## 10. Running the Development Server
 Start Laravel and Vite in separate terminals:
 
 ```bash
@@ -100,28 +115,25 @@ npm run dev
 
 Then open the app in your browser at the URL shown by `php artisan serve` (commonly `http://127.0.0.1:8000`).
 
-## 10. Project Structure Overview
+## 11. Project Structure Overview
 
 ```text
 app/
   Console/Commands/        # Custom artisan commands (including question import)
-  Http/Controllers/        # HTTP controllers (results flow)
+  Http/Controllers/        # Public and admin HTTP controllers
+  Models/                  # Domain entities and User model
+config/
+  auth.php                 # Session guard + user provider configuration
 database/
-  migrations/              # Schema for tests, questions, gifts, attempts, answers
-  seeders/                 # AVANCE 2020 base data seeder
+  migrations/              # Schema for tests, questions, attempts, users, and sessions
+  seeders/                 # AVANCE 2020 base data + AdminUserSeeder
 resources/
-  views/                   # Blade templates for test and result pages
+  views/                   # Blade templates for test, result pages, and admin UI
 routes/
-  web.php                  # Web routes
+  web.php                  # Public and admin routes
 storage/app/
   preguntas-avance-2020.json  # 60-question dataset
 ```
-
-## 11. Future Improvements
-- Add authentication/authorization for admin-only dataset management.
-- Add CI workflows for automated tests and static checks.
-- Add API endpoints for external reporting/analytics integrations.
-- Add containerized local setup (Docker) for faster onboarding.
 
 ## 12. License
 This project is licensed under the **MIT License**.
