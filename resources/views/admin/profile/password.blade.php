@@ -24,14 +24,14 @@
             </div>
         @endif
 
-        <div class="card border border-base-300 bg-base-100 shadow-sm">
-            <div class="card-body gap-6">
+        <div class="card border border-base-300/80 bg-base-100 shadow-sm">
+            <div class="card-body gap-6 p-5 sm:p-6">
                 <div>
-                    <h2 class="card-title">Seguridad de la cuenta</h2>
+                    <h2 class="text-base font-semibold tracking-tight">Seguridad de la cuenta</h2>
                     <p class="text-sm text-base-content/70">Actualiza tu contraseña regularmente para mantener tu cuenta protegida.</p>
                 </div>
 
-                <div class="rounded-xl border border-base-300 bg-base-200 p-4 text-sm leading-relaxed">
+                <div class="rounded-xl border border-base-300/80 bg-base-200/70 p-4 text-sm leading-relaxed">
                     <p class="font-semibold">Recomendaciones de contraseña:</p>
                     <ul class="mt-2 list-disc space-y-1 pl-5 text-base-content/80">
                         <li>Usa mínimo 8 caracteres.</li>
@@ -44,25 +44,25 @@
                     @csrf
                     @method('PUT')
 
-                    <label class="form-control">
-                        <span class="label-text">Contraseña actual</span>
-                        <input type="password" name="current_password" class="input input-bordered focus:border-primary focus:outline-none" required>
+                    <label class="form-control gap-1">
+                        <span class="label-text text-xs font-medium uppercase tracking-[0.08em] text-base-content/60">Contraseña actual</span>
+                        <input type="password" name="current_password" class="input input-bordered border-base-300/80 bg-base-100 focus:border-primary focus:outline-none" required>
                         @error('current_password')
                             <span class="mt-1 text-sm text-error">{{ $message }}</span>
                         @enderror
                     </label>
 
-                    <label class="form-control">
-                        <span class="label-text">Nueva contraseña</span>
-                        <input type="password" name="new_password" class="input input-bordered focus:border-primary focus:outline-none" required>
+                    <label class="form-control gap-1">
+                        <span class="label-text text-xs font-medium uppercase tracking-[0.08em] text-base-content/60">Nueva contraseña</span>
+                        <input type="password" name="new_password" class="input input-bordered border-base-300/80 bg-base-100 focus:border-primary focus:outline-none" required>
                         @error('new_password')
                             <span class="mt-1 text-sm text-error">{{ $message }}</span>
                         @enderror
                     </label>
 
-                    <label class="form-control">
-                        <span class="label-text">Confirmar nueva contraseña</span>
-                        <input type="password" name="new_password_confirmation" class="input input-bordered focus:border-primary focus:outline-none" required>
+                    <label class="form-control gap-1">
+                        <span class="label-text text-xs font-medium uppercase tracking-[0.08em] text-base-content/60">Confirmar nueva contraseña</span>
+                        <input type="password" name="new_password_confirmation" class="input input-bordered border-base-300/80 bg-base-100 focus:border-primary focus:outline-none" required>
                     </label>
 
                     <button class="btn btn-primary min-w-48" data-loading-btn>
