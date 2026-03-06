@@ -11,23 +11,23 @@
     <title>{{ $title }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-base-200/70 text-base-content antialiased">
-<div class="relative min-h-screen" data-admin-shell>
-    <div class="fixed inset-0 z-40 hidden bg-neutral/30 backdrop-blur-sm lg:hidden" data-sidebar-overlay></div>
+<body class="bg-base-200 text-base-content antialiased">
+<div class="min-h-screen" data-admin-shell>
+    <div class="fixed inset-0 z-40 hidden bg-base-content/30 lg:hidden" data-sidebar-overlay></div>
 
     <aside
-        class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full border-r border-base-300/80 bg-base-100/95 shadow-2xl shadow-base-content/5 transition-transform duration-300 ease-out lg:translate-x-0 lg:shadow-none"
+        class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full border-r border-base-300 bg-base-100 transition-transform duration-300 lg:translate-x-0"
         data-admin-sidebar
-        aria-label="Navegación de administración"
+        aria-label="Navegación del panel"
     >
         <x-admin.sidebar />
     </aside>
 
-    <div class="relative min-h-screen lg:ml-72">
+    <div class="lg:pl-72">
         <x-admin.topbar :title="$title" :breadcrumb="$breadcrumb" />
 
-        <main class="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
-            <div class="mx-auto w-full max-w-7xl space-y-5 lg:space-y-6">
+        <main class="p-4 sm:p-6 lg:p-8">
+            <div class="mx-auto w-full max-w-7xl space-y-6">
                 {{ $slot }}
             </div>
         </main>
@@ -50,60 +50,45 @@
     const dropdownButton = shell.querySelector('[data-user-dropdown-button]');
     const dropdownMenu = shell.querySelector('[data-user-dropdown-menu]');
 
-    const closeDropdown = () => {
-        if (!dropdown || !dropdownMenu || !dropdownButton) {
+    const setSidebarOpen = (open) => {
+        if (!sidebar || !overlay) {
             return;
         }
 
-        dropdownMenu.classList.add('hidden');
-        dropdownButton.setAttribute('aria-expanded', 'false');
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            return;
+        }
+
+        sidebar.classList.toggle('-translate-x-full', !open);
+        overlay.classList.toggle('hidden', !open);
+        document.body.classList.toggle('overflow-hidden', open);
     };
 
-    const openDropdown = () => {
-        if (!dropdown || !dropdownMenu || !dropdownButton) {
+    const closeDropdown = () => {
+        if (!dropdownButton || !dropdownMenu) {
             return;
         }
 
-        dropdownMenu.classList.remove('hidden');
-        dropdownButton.setAttribute('aria-expanded', 'true');
+        dropdownButton.setAttribute('aria-expanded', 'false');
+        dropdownMenu.classList.add('hidden');
     };
 
     const toggleDropdown = () => {
-        if (!dropdownMenu || dropdownMenu.classList.contains('hidden')) {
-            openDropdown();
+        if (!dropdownButton || !dropdownMenu) {
             return;
         }
 
-        closeDropdown();
+        const isOpen = dropdownButton.getAttribute('aria-expanded') === 'true';
+        dropdownButton.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        dropdownMenu.classList.toggle('hidden', isOpen);
     };
 
-    const openSidebar = () => {
-        sidebar?.classList.remove('-translate-x-full');
-        overlay?.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-    };
-
-    const closeSidebar = () => {
-        if (window.innerWidth >= 1024) {
-            return;
-        }
-
-        sidebar?.classList.add('-translate-x-full');
-        overlay?.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-    };
-
-    const closeSidebarAndDropdown = () => {
-        closeSidebar();
-        closeDropdown();
-    };
-
-    closeDropdown();
-    closeSidebar();
-
-    openButton?.addEventListener('click', openSidebar);
-    overlay?.addEventListener('click', closeSidebarAndDropdown);
-    closeButtons.forEach((button) => button.addEventListener('click', closeSidebar));
+    openButton?.addEventListener('click', () => setSidebarOpen(true));
+    overlay?.addEventListener('click', () => setSidebarOpen(false));
+    closeButtons.forEach((button) => button.addEventListener('click', () => setSidebarOpen(false)));
 
     dropdownButton?.addEventListener('click', (event) => {
         event.preventDefault();
@@ -111,29 +96,22 @@
     });
 
     document.addEventListener('click', (event) => {
-        const target = event.target;
-
-        if (dropdown && target instanceof Node && !dropdown.contains(target)) {
+        if (dropdown && event.target instanceof Node && !dropdown.contains(event.target)) {
             closeDropdown();
         }
     });
 
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            closeSidebarAndDropdown();
+            setSidebarOpen(false);
+            closeDropdown();
         }
     });
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
-            sidebar?.classList.remove('-translate-x-full');
-            overlay?.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-            return;
-        }
+    window.addEventListener('resize', () => setSidebarOpen(false));
 
-        sidebar?.classList.add('-translate-x-full');
-    });
+    setSidebarOpen(false);
+    closeDropdown();
 })();
 </script>
 </body>
