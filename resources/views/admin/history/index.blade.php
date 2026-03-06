@@ -5,7 +5,7 @@
         ['label' => 'Historial'],
     ]"
 >
-    <div class="card border border-base-300/80 bg-base-100 shadow-sm">
+    <section class="card border border-base-300 bg-base-100 shadow-sm">
         <div class="card-body gap-5">
             <div>
                 <h2 class="card-title">Filtros de búsqueda</h2>
@@ -15,22 +15,22 @@
             <form method="GET" action="{{ route('admin.history.index') }}" class="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                 <label class="form-control">
                     <span class="label-text">Desde</span>
-                    <input type="date" name="from" value="{{ request('from') }}" class="input input-bordered focus:border-primary" />
+                    <input type="date" name="from" value="{{ request('from') }}" class="input input-bordered focus:border-primary focus:outline-none" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Hasta</span>
-                    <input type="date" name="to" value="{{ request('to') }}" class="input input-bordered focus:border-primary" />
+                    <input type="date" name="to" value="{{ request('to') }}" class="input input-bordered focus:border-primary focus:outline-none" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Participante</span>
-                    <input type="text" name="participant" value="{{ request('participant') }}" class="input input-bordered focus:border-primary" placeholder="Nombre" />
+                    <input type="text" name="participant" value="{{ request('participant') }}" class="input input-bordered focus:border-primary focus:outline-none" placeholder="Nombre" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Test</span>
-                    <select name="test_id" class="select select-bordered focus:border-primary">
+                    <select name="test_id" class="select select-bordered focus:border-primary focus:outline-none">
                         <option value="">Todos</option>
                         @foreach($tests as $test)
                             <option value="{{ $test->id }}" @selected((string) request('test_id', $selectedTestId) === (string) $test->id)>{{ $test->nombre }}</option>
@@ -40,7 +40,7 @@
 
                 <label class="form-control">
                     <span class="label-text">Don principal</span>
-                    <select name="top_gift_id" class="select select-bordered focus:border-primary">
+                    <select name="top_gift_id" class="select select-bordered focus:border-primary focus:outline-none">
                         <option value="">Todos</option>
                         @foreach($gifts as $gift)
                             <option value="{{ $gift->id }}" @selected((string) request('top_gift_id') === (string) $gift->id)>{{ $gift->nombre }}</option>
@@ -54,13 +54,18 @@
                 </div>
             </form>
         </div>
-    </div>
+    </section>
 
-    <div class="card border border-base-300/80 bg-base-100 shadow-sm">
-        <div class="card-body overflow-hidden p-0">
+    <section class="card border border-base-300 bg-base-100 shadow-sm">
+        <div class="card-body p-0">
+            <div class="flex items-center justify-between border-b border-base-300 px-5 py-4">
+                <h3 class="text-base font-semibold">Resultados registrados</h3>
+                <span class="text-xs text-base-content/60">{{ $attempts->total() }} registros</span>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="table table-zebra [--tblr:theme(colors.base-300)]">
-                    <thead class="sticky top-0 z-10 bg-base-200 text-base-content">
+                    <thead class="bg-base-200 text-base-content">
                         <tr>
                             <th>Fecha/hora</th>
                             <th>Participante</th>
@@ -100,5 +105,5 @@
                 {{ $attempts->links() }}
             </div>
         </div>
-    </div>
+    </section>
 </x-layouts.admin>
