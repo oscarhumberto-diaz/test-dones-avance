@@ -14,8 +14,8 @@
         </div>
     @endif
 
-    <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <article class="card bg-base-100 shadow-sm">
+    <section class="grid gap-5 xl:grid-cols-12">
+        <article class="card bg-base-100 shadow-sm xl:col-span-4">
             <div class="card-body">
                 <div class="flex items-start justify-between gap-3">
                     <div>
@@ -28,28 +28,46 @@
                         </svg>
                     </div>
                 </div>
+                <p class="text-sm text-base-content/60">Total acumulado de respuestas guardadas por participantes.</p>
             </div>
         </article>
 
-        <article class="card bg-base-100 shadow-sm">
+        <article class="card bg-base-100 shadow-sm xl:col-span-4">
             <div class="card-body">
-                <p class="text-sm font-medium text-base-content/70">Último intento</p>
-                <p class="mt-2 text-2xl font-semibold">
-                    {{ $lastAttemptAt ? \Illuminate\Support\Carbon::parse($lastAttemptAt)->format('d/m/Y H:i') : 'Sin datos todavía' }}
-                </p>
-                <p class="text-sm text-base-content/60">Última actividad registrada en el sistema.</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-medium text-base-content/70">Último intento</p>
+                        <p class="mt-2 text-2xl font-semibold leading-tight">
+                            {{ $lastAttemptAt ? \Illuminate\Support\Carbon::parse($lastAttemptAt)->format('d/m/Y H:i') : 'Sin datos todavía' }}
+                        </p>
+                    </div>
+                    <div class="rounded-xl bg-info/10 p-3 text-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-sm text-base-content/60">Última actividad registrada dentro del sistema.</p>
             </div>
         </article>
 
-        <article class="card bg-base-100 shadow-sm md:col-span-2 xl:col-span-1">
+        <article class="card bg-base-100 shadow-sm xl:col-span-4">
             <div class="card-body">
                 <h2 class="card-title">Accesos rápidos</h2>
-                <p class="text-sm text-base-content/70">Navega a las acciones más usadas del panel.</p>
-                <div class="mt-2 flex flex-wrap gap-2">
-                    <a href="{{ route('admin.history.index') }}" class="btn btn-primary btn-sm">Ver historial</a>
-                    <a href="{{ route('admin.profile.password.edit') }}" class="btn btn-outline btn-sm">Cambiar contraseña</a>
+                <p class="text-sm text-base-content/70">Atajos directos para gestión diaria del panel.</p>
+                <div class="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-ghost justify-start">Ir a dashboard</a>
+                    <a href="{{ route('admin.history.index') }}" class="btn btn-primary justify-start">Ver historial de resultados</a>
+                    <a href="{{ route('admin.profile.password.edit') }}" class="btn btn-outline justify-start sm:col-span-2 xl:col-span-1">Cambiar contraseña</a>
                 </div>
             </div>
         </article>
+    </section>
+
+    <section class="card bg-base-100 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title">Resumen del panel</h2>
+            <p class="text-sm text-base-content/70">Usa la navegación lateral para explorar historial, revisar resultados y administrar la seguridad de la cuenta.</p>
+        </div>
     </section>
 </x-layouts.admin>
