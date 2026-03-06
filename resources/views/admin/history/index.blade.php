@@ -5,8 +5,8 @@
         ['label' => 'Historial'],
     ]"
 >
-    <div class="card bg-base-100 shadow-sm">
-        <div class="card-body gap-4">
+    <div class="card border border-base-300/80 bg-base-100 shadow-sm">
+        <div class="card-body gap-5">
             <div>
                 <h2 class="card-title">Filtros de búsqueda</h2>
                 <p class="text-sm text-base-content/70">Refina por fechas, participante, test o don principal.</p>
@@ -15,22 +15,22 @@
             <form method="GET" action="{{ route('admin.history.index') }}" class="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                 <label class="form-control">
                     <span class="label-text">Desde</span>
-                    <input type="date" name="from" value="{{ request('from') }}" class="input input-bordered" />
+                    <input type="date" name="from" value="{{ request('from') }}" class="input input-bordered focus:border-primary" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Hasta</span>
-                    <input type="date" name="to" value="{{ request('to') }}" class="input input-bordered" />
+                    <input type="date" name="to" value="{{ request('to') }}" class="input input-bordered focus:border-primary" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Participante</span>
-                    <input type="text" name="participant" value="{{ request('participant') }}" class="input input-bordered" placeholder="Nombre" />
+                    <input type="text" name="participant" value="{{ request('participant') }}" class="input input-bordered focus:border-primary" placeholder="Nombre" />
                 </label>
 
                 <label class="form-control">
                     <span class="label-text">Test</span>
-                    <select name="test_id" class="select select-bordered">
+                    <select name="test_id" class="select select-bordered focus:border-primary">
                         <option value="">Todos</option>
                         @foreach($tests as $test)
                             <option value="{{ $test->id }}" @selected((string) request('test_id', $selectedTestId) === (string) $test->id)>{{ $test->nombre }}</option>
@@ -40,7 +40,7 @@
 
                 <label class="form-control">
                     <span class="label-text">Don principal</span>
-                    <select name="top_gift_id" class="select select-bordered">
+                    <select name="top_gift_id" class="select select-bordered focus:border-primary">
                         <option value="">Todos</option>
                         @foreach($gifts as $gift)
                             <option value="{{ $gift->id }}" @selected((string) request('top_gift_id') === (string) $gift->id)>{{ $gift->nombre }}</option>
@@ -48,18 +48,18 @@
                     </select>
                 </label>
 
-                <div class="md:col-span-2 xl:col-span-5 flex flex-wrap gap-2">
+                <div class="flex flex-wrap gap-2 pt-1 md:col-span-2 xl:col-span-5">
                     <button class="btn btn-primary">Aplicar filtros</button>
-                    <a href="{{ route('admin.history.index') }}" class="btn btn-ghost">Limpiar</a>
+                    <a href="{{ route('admin.history.index') }}" class="btn btn-outline">Limpiar</a>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card bg-base-100 shadow-sm">
+    <div class="card border border-base-300/80 bg-base-100 shadow-sm">
         <div class="card-body overflow-hidden p-0">
             <div class="overflow-x-auto">
-                <table class="table table-zebra">
+                <table class="table table-zebra [--tblr:theme(colors.base-300)]">
                     <thead class="sticky top-0 z-10 bg-base-200 text-base-content">
                         <tr>
                             <th>Fecha/hora</th>
@@ -84,7 +84,7 @@
                                 </ol>
                             </td>
                             <td class="text-right">
-                                <a href="{{ route('admin.history.show', $attempt) }}" class="btn btn-sm btn-outline">Ver detalle</a>
+                                <a href="{{ route('admin.history.show', $attempt) }}" class="btn btn-sm btn-outline hover:bg-primary hover:text-primary-content">Ver detalle</a>
                             </td>
                         </tr>
                     @empty

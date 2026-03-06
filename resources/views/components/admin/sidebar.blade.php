@@ -23,13 +23,13 @@
 
 <div class="flex h-full flex-col px-4 py-5 lg:py-6">
     <div class="flex items-start justify-between gap-2 px-2">
-        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-3" data-close-sidebar>
-            <div class="grid size-11 place-items-center rounded-2xl bg-primary/10 text-primary">
+        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-3 rounded-xl px-1 py-1" data-close-sidebar>
+            <div class="grid size-11 place-items-center rounded-2xl bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary/15">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="size-6 stroke-current">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5l7.5 4.125v6.75L12 19.5 4.5 15.375v-6.75L12 4.5z" />
                 </svg>
             </div>
-            <div>
+            <div class="space-y-0.5">
                 <p class="text-xs font-semibold uppercase tracking-[0.14em] text-base-content/60">Panel admin</p>
                 <p class="text-lg font-extrabold leading-tight">AVANCE 2020 · Test de Dones</p>
             </div>
@@ -43,29 +43,29 @@
     </div>
 
     <nav class="mt-6 flex-1">
-        <ul class="menu w-full gap-1 rounded-2xl bg-base-200/60 p-2">
+        <ul class="menu w-full gap-1 rounded-2xl border border-base-300/80 bg-base-200/50 p-2">
             @foreach($navItems as $item)
                 <li>
                     <a
                         href="{{ route($item['route']) }}"
                         data-close-sidebar
                         @class([
-                            'rounded-xl text-sm',
-                            'active font-semibold' => $item['active'],
-                            'text-base-content/80 hover:text-base-content' => ! $item['active'],
+                            'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+                            'bg-primary text-primary-content font-semibold shadow-sm hover:bg-primary/90 active:scale-[0.99]' => $item['active'],
+                            'text-base-content/80 hover:bg-base-100 hover:text-base-content active:bg-base-300/60' => ! $item['active'],
                         ])
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="size-5 shrink-0 stroke-current">
                             {!! $item['icon'] !!}
                         </svg>
-                        <span>{{ $item['label'] }}</span>
+                        <span class="leading-tight">{{ $item['label'] }}</span>
                     </a>
                 </li>
             @endforeach
         </ul>
     </nav>
 
-    <div class="rounded-xl border border-base-300 bg-base-200/50 p-3 text-xs text-base-content/70">
+    <div class="rounded-xl border border-base-300 bg-base-200/50 px-3 py-2.5 text-xs leading-relaxed text-base-content/70">
         Administración interna · acceso restringido.
     </div>
 </div>
