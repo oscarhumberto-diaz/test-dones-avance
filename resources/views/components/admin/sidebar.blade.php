@@ -22,7 +22,7 @@
 @endphp
 
 <div class="flex h-full flex-col px-4 py-5">
-    <div class="flex items-start justify-between gap-3 border-b border-base-300 pb-5">
+    <div class="flex items-start justify-between gap-3 border-b border-base-300/80 pb-5">
         <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-3 rounded-xl" data-close-sidebar>
             <div class="grid size-11 place-items-center rounded-2xl bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary/15">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="size-6 stroke-current">
@@ -31,11 +31,11 @@
             </div>
             <div>
                 <p class="text-base font-extrabold leading-tight tracking-tight">AVANCE 2020</p>
-                <p class="text-xs font-medium uppercase tracking-[0.14em] text-base-content/60">Test de Dones</p>
+                <p class="text-[11px] font-medium uppercase tracking-[0.14em] text-base-content/55">Test de Dones</p>
             </div>
         </a>
 
-        <button type="button" class="btn btn-ghost btn-sm btn-square lg:hidden" data-close-sidebar aria-label="Cerrar menú">
+        <button type="button" class="btn btn-ghost btn-sm btn-square text-base-content/70 hover:bg-base-200 hover:text-base-content lg:hidden" data-close-sidebar aria-label="Cerrar menú">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -51,8 +51,8 @@
                         data-close-sidebar
                         @class([
                             'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
-                            'bg-primary text-primary-content shadow-sm hover:bg-primary/90 active:scale-[0.99]' => $item['active'],
-                            'text-base-content/75 hover:bg-base-200 hover:text-base-content active:bg-base-300/60' => ! $item['active'],
+                            'border border-primary/10 bg-primary text-primary-content shadow-sm hover:bg-primary/90 active:scale-[0.99]' => $item['active'],
+                            'border border-transparent text-base-content/75 hover:border-base-300 hover:bg-base-200 hover:text-base-content active:bg-base-300/60' => ! $item['active'],
                         ])
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="size-5 shrink-0 stroke-current">
@@ -65,7 +65,7 @@
         </ul>
     </nav>
 
-    <div class="rounded-xl border border-base-300 bg-base-200 px-3 py-2.5 text-xs leading-relaxed text-base-content/70">
+    <div class="rounded-xl border border-base-300/80 bg-base-200/80 px-3 py-2.5 text-xs leading-relaxed text-base-content/70">
         Administración interna · acceso restringido.
     </div>
 </div>

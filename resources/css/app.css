@@ -5,3 +5,22 @@
 body {
   @apply bg-base-200 text-base-content;
 }
+
+@layer components {
+  .card {
+    @apply transition-shadow duration-200;
+  }
+
+  .btn {
+    @apply tracking-[0.01em];
+  }
+
+  .input,
+  .select {
+    @apply text-sm;
+  }
+
+  .table thead th {
+    @apply font-semibold;
+  }
+}

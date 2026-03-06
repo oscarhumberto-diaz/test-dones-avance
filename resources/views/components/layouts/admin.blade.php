@@ -11,12 +11,12 @@
     <title>{{ $title }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-base-200 text-base-content antialiased">
+<body class="min-h-screen bg-base-200/70 text-base-content antialiased">
 <div class="relative min-h-screen" data-admin-shell>
-    <div class="fixed inset-0 z-40 hidden bg-base-content/35 backdrop-blur-sm lg:hidden" data-sidebar-overlay></div>
+    <div class="fixed inset-0 z-40 hidden bg-neutral/30 backdrop-blur-sm lg:hidden" data-sidebar-overlay></div>
 
     <aside
-        class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full border-r border-base-300 bg-base-100 transition-transform duration-300 ease-out lg:translate-x-0"
+        class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full border-r border-base-300/80 bg-base-100/95 shadow-2xl shadow-base-content/5 transition-transform duration-300 ease-out lg:translate-x-0 lg:shadow-none"
         data-admin-sidebar
         aria-label="Navegación de administración"
     >
@@ -26,8 +26,8 @@
     <div class="relative min-h-screen lg:ml-72">
         <x-admin.topbar :title="$title" :breadcrumb="$breadcrumb" />
 
-        <main class="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-            <div class="mx-auto w-full max-w-7xl space-y-6">
+        <main class="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+            <div class="mx-auto w-full max-w-7xl space-y-5 lg:space-y-6">
                 {{ $slot }}
             </div>
         </main>
