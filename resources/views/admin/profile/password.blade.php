@@ -24,14 +24,14 @@
             </div>
         @endif
 
-        <div class="card border border-base-300/80 bg-base-100 shadow-sm">
+        <div class="card border border-base-300 bg-base-100 shadow-sm">
             <div class="card-body gap-6">
                 <div>
                     <h2 class="card-title">Seguridad de la cuenta</h2>
                     <p class="text-sm text-base-content/70">Actualiza tu contraseña regularmente para mantener tu cuenta protegida.</p>
                 </div>
 
-                <div class="rounded-xl border border-base-300 bg-base-200/70 p-4 text-sm leading-relaxed">
+                <div class="rounded-xl border border-base-300 bg-base-200 p-4 text-sm leading-relaxed">
                     <p class="font-semibold">Recomendaciones de contraseña:</p>
                     <ul class="mt-2 list-disc space-y-1 pl-5 text-base-content/80">
                         <li>Usa mínimo 8 caracteres.</li>
